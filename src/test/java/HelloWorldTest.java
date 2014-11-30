@@ -16,6 +16,11 @@ public class HelloWorldTest {
   }
 
   @Test
+  public void testHelloWithPrefix() {
+    assertThat("HelloWorld.helloWithPrefix test", "[DEV]Hello, World!", is(hw.helloWithPrefix()));
+  }
+
+  @Test
   public void testStringEqualsAbc() {
     assertThat("HelloWorld.stringEqualsAbc test", true, is(hw.stringEqualsAbc("abc")));
   }
