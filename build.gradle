@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+apply plugin: 'application'
 
 repositories {
   mavenCentral()
@@ -14,6 +15,8 @@ findbugsMain {
   excludeFilter = file('./conf/findbugs/exclude-filter.xml')
 }
 
-// jacocoTestReportタスクはtestタスクに依存する
+// run test task before jacocoTestReport task.
 jacocoTestReport.dependsOn test
 
+// application plugin
+mainClassName = 'Main'
