@@ -12,7 +12,7 @@ dependencies {
 }
 
 findbugsMain {
-  excludeFilter = file('./conf/findbugs/exclude-filter.xml')
+  excludeFilter = file('src/test/resources/findbugs/exclude-filter.xml')
 }
 
 // run test task before jacocoTestReport task.
