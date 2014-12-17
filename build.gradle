@@ -20,3 +20,23 @@ jacocoTestReport.dependsOn test
 
 // application plugin
 mainClassName = 'Main'
+
+sourceSets {
+  def envValue
+  if(project.hasProperty('env')) {
+    // -Penv=xx option
+    envValue = env
+  } else {
+    // no -Penv=xx option
+    envValue = 'dev'
+  }
+  println 'envValue = ' + envValue
+
+  main {
+    resources {
+      srcDir 'src/main/resources'
+      srcDir 'envdepends/' + envValue
+    }
+  }
+}
+
