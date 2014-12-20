@@ -20,6 +20,7 @@ jacocoTestReport.dependsOn test
 
 // application plugin
 mainClassName = 'Main'
+applicationDefaultJvmArgs = ["-Xms256m"]
 
 sourceSets {
   def envValue
