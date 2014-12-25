@@ -38,8 +38,15 @@ sourceSets {
   main {
     resources {
       srcDir 'src/main/resources'
-      srcDir 'envdepends/' + envValue
+      srcDir 'envdepends/' + envValue + '/resources'
     }
+  }
+
+  applicationDistribution.from('conf') {
+    into 'conf'
+  }
+  applicationDistribution.from('envdepends/' + envValue + '/conf') {
+    into 'conf'
   }
 }
 
