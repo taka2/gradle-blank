@@ -1,7 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
-apply plugin: 'application'
 
 repositories {
   mavenCentral()
@@ -13,6 +12,10 @@ dependencies {
   runtime fileTree(dir: 'libs', include: '**/*.jar')
 }
 
+compileJava {
+  options.encoding = 'UTF-8'
+}
+
 findbugsMain {
   excludeFilter = file('src/test/resources/findbugs/exclude-filter.xml')
 }
@@ -20,11 +23,41 @@ findbugsMain {
 // run test task before jacocoTestReport task.
 jacocoTestReport.dependsOn test
 
-// application plugin
-mainClassName = 'Main'
-applicationDefaultJvmArgs = ["-Xms256m"]
-
 sourceSets {
+  def envValue = getEnvValue()
+
+  main {
+    resources {
+      srcDir 'src/main/resources'
+      srcDir 'envdepends/' + envValue + '/resources'
+    }
+  }
+}
+
+// Archive project task.
+task dist(type: Zip, dependsOn: jar) {
+  def envValue = getEnvValue()
+  def distDir = new File('build/dist/' + envValue)
+  destinationDir = distDir
+
+  archiveName = "${baseName}_${envValue}.${extension}"
+
+  from 'src/dist'
+  into('lib') {
+    from 'libs'
+  }
+  into('lib') {
+    from jar.archivePath
+  }
+  into('conf') {
+    from 'conf'
+  }
+  into('conf') {
+    from 'envdepends/' + envValue + '/conf'
+  }
+}
+
+def getEnvValue() {
   def envValue
   if(project.hasProperty('env')) {
     // -Penv=xx option
@@ -34,19 +67,5 @@ sourceSets {
     envValue = 'dev'
   }
   println 'envValue = ' + envValue
-
-  main {
-    resources {
-      srcDir 'src/main/resources'
-      srcDir 'envdepends/' + envValue + '/resources'
-    }
-  }
-
-  applicationDistribution.from('conf') {
-    into 'conf'
-  }
-  applicationDistribution.from('envdepends/' + envValue + '/conf') {
-    into 'conf'
-  }
+  envValue
 }
-
